@@ -24,6 +24,7 @@ $(document).ready(function(){
 	add.on('touchend',function(){
 		$('.show').show()
 		$('.s-data').html(fullTime)
+		$('.show-in input').val('')
 	})
 	tijiao.on('touchend',function(){
 		var val=$.trim($('.show-in input').val())
