@@ -66,6 +66,9 @@ $(document).ready(function(){
 	//
 	$('.s-img').on('touchend',function(){
 		$('.show').hide()
+		if($.trim($('.show-in input').val())==''){
+			return
+		}
 		var todo={
 			name:oldText,
 			states:0,
