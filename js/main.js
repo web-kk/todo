@@ -2,7 +2,7 @@ $(document).ready(function(){
 	var add=$('.add')
 	var ul=$('#ul')
 	var ss=$('.input input')
-	var togos=[]
+	var todos=[]
 	var tijiao=$('.s-add')
 	var fullTime
 	var time=new Date()
