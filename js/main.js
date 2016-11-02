@@ -9,6 +9,8 @@ $(document).ready(function(){
 	var nowTime
 	var nowHour
 	var nowFen
+	var color=['#f7f7f7','#A1D6AE','#F39484','#F7D885']
+	var start
 	nowTime=time.toLocaleDateString()
 	nowHour=time.getHours()
 	nowFen=time.getMinutes()
@@ -17,7 +19,8 @@ $(document).ready(function(){
 	if(localStorage.todos){
 		todos=JSON.parse(localStorage.todos);
 		for(var i in todos){
-			$('<li><div class="content">'+todos[i].name+'</div><div class="data">'+todos[i].date+'</div></li>').appendTo('#ul')
+			var c=(todos[i].states)? 'done':''
+			$('<li class="'+c+'"><div class="content">'+todos[i].name+'</div><div class="data">'+todos[i].date+'</div></li>').appendTo('#ul')
 		}
 	}	
 	//添加
@@ -43,28 +46,34 @@ $(document).ready(function(){
 		$('<li><div class="content">'+todo.name+'</div><div class="data">'+fullTime+'</div></li>').appendTo('#ul')
 		$('.show-in input').val('')
 	})
-	var oldText
-	
-	//
-	$('#ul').on('touchend','li',function(){
-		var index=$(this).index()
-		oldText=$(this).find('.content').html()	
-		$('#ul li').eq(index).remove()
-		todos.splice(index,1)
-		localStorage.todos=JSON.stringify(todos)
-		$('.show').show()
-		$('.show-in input').val(oldText)	
-		$('.s-data').html(fullTime)
-		var val=$.trim($('.show-in input').val())
-		var todo={
-			name:val,
-			states:0,
-			date:fullTime,
-			color:'#f7f7f7'
-		}
-		localStorage.todos=JSON.stringify(todos)		
+	var oldText	
+	$('#ul').on('touchstart','li',function(e){
+		start=e.originalEvent.changedTouches[0].clientX
 	})
-	//
+	//修改
+	$('#ul').on('touchend','li',function(e){
+		var now=e.originalEvent.changedTouches[0].clientX
+		if(now-start==0){
+			var index=$(this).index()
+			oldText=$(this).find('.content').html()	
+			$('#ul li').eq(index).remove()
+			todos.splice(index,1)
+			localStorage.todos=JSON.stringify(todos)
+			$('.show').show()
+			$('.show-in input').val(oldText)	
+			$('.s-data').html(fullTime)
+			var val=$.trim($('.show-in input').val())
+			var todo={
+				name:val,
+				states:0,
+				date:fullTime,
+				color:'#f7f7f7'
+			}
+			localStorage.todos=JSON.stringify(todos)	
+		}
+			
+	})
+	//返回
 	$('.s-img').on('touchend',function(){
 		$('.show').hide()
 		if($.trim($('.show-in input').val())==''){
@@ -95,14 +104,46 @@ $(document).ready(function(){
 			$('.color').hide()
 		}
 	})
-	var color=['#f7f7f7','#A1D6AE','#F39484','#F7D885']
+
 	$('.color').on('touchend','li',function(){
 		var index=$(this).index()
 		$('.color li span').css('border-radius','0%').eq(index).css('border-radius','50%')
 		$('.show').css('background',color[index])
-		var length=$('#ul li').length
-		$('#ul li').eq(length+1).css('background',color[index])
+		$('#ul li').eq(index).remove()
+		todos.splice(index,1)
+		localStorage.todos=JSON.stringify(todos)
+//		var length=$('#ul li').length
+//		console.log(length)
+//		$('#ul li').eq(length).css('background',color[index])
 	})
+	//左右滑动事件
+	$('#ul').on('touchend','li',function(e){
+		var now=e.originalEvent.changedTouches[0].clientX
+		if (now-start>30){
+			var index=$(this).index()
+			$('#ul li').eq(index).addClass('done')
+			todos[index].states=1
+			localStorage.todos=JSON.stringify(todos)	
+		}
+		if(now-start<-30){
+			var index=$(this).index()
+			$('#ul li').eq(index).removeClass('done')
+			todos[index].states=0
+			localStorage.todos=JSON.stringify(todos)			
+		}
+	})
+	//搜索
+	$('.input input').on('touchend',function(){
+		setInterval(function(){
+			$('#ul li').hide()
+			$('.content:contains("'+$('.input input').val()+'")').closest('li').show()
+			if($('.input input').val()==''){
+				$('#ul li').show()
+			}
+		},300)
+		
+	})
+	
 })
 
 
