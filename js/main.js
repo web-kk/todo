@@ -4,17 +4,8 @@ $(document).ready(function(){
 	var ss=$('.input input')
 	var todos=[]
 	var tijiao=$('.s-add')
-	var fullTime
-	var time=new Date()
-	var nowTime
-	var nowHour
-	var nowFen
 	var color=['#f7f7f7','#A1D6AE','#F39484','#F7D885']
 	var start
-	nowTime=time.toLocaleDateString()
-	nowHour=time.getHours()
-	nowFen=time.getMinutes()
-	fullTime=nowTime+' '+nowHour+':'+nowFen
 	//遍历
 	if(localStorage.todos){
 		todos=JSON.parse(localStorage.todos);
@@ -25,6 +16,15 @@ $(document).ready(function(){
 	}	
 	//添加
 	add.on('touchend',function(){
+		var fullTime
+		var time=new Date()
+		var nowTime
+		var nowHour
+		var nowFen
+		nowTime=time.toLocaleDateString()
+		nowHour=time.getHours()
+		nowFen=time.getMinutes()
+		fullTime=nowTime+' '+nowHour+':'+nowFen	
 		$('.show').show()
 		$('.s-data').html(fullTime)
 		$('.show-in input').val('')
@@ -34,6 +34,15 @@ $(document).ready(function(){
 		if(val==''){
 			return
 		}
+		var fullTime
+		var time=new Date()
+		var nowTime
+		var nowHour
+		var nowFen
+		nowTime=time.toLocaleDateString()
+		nowHour=time.getHours()
+		nowFen=time.getMinutes()
+		fullTime=nowTime+' '+nowHour+':'+nowFen	
 		var todo={
 			name:val,
 			states:0,
@@ -54,6 +63,15 @@ $(document).ready(function(){
 	$('#ul').on('touchend','li',function(e){
 		var now=e.originalEvent.changedTouches[0].clientX
 		if(now-start==0){
+			var fullTime
+			var time=new Date()
+			var nowTime
+			var nowHour
+			var nowFen
+			nowTime=time.toLocaleDateString()
+			nowHour=time.getHours()
+			nowFen=time.getMinutes()
+			fullTime=nowTime+' '+nowHour+':'+nowFen	
 			var index=$(this).index()
 			oldText=$(this).find('.content').html()	
 			$('#ul li').eq(index).remove()
@@ -79,6 +97,15 @@ $(document).ready(function(){
 		if($.trim($('.show-in input').val())==''){
 			return
 		}
+		var fullTime
+		var time=new Date()
+		var nowTime
+		var nowHour
+		var nowFen
+		nowTime=time.toLocaleDateString()
+		nowHour=time.getHours()
+		nowFen=time.getMinutes()
+		fullTime=nowTime+' '+nowHour+':'+nowFen	
 		var todo={
 			name:oldText,
 			states:0,
@@ -92,6 +119,9 @@ $(document).ready(function(){
 	//删除
 	$('.dele').on('touchend',function(){
 		$('.show').hide()
+		if($.trim($('.show-in input').val())==''){
+			return
+		}
 		var index=$(this).index()
 		todos.splice(index,1)
 		localStorage.todos=JSON.stringify(todos)
@@ -109,6 +139,7 @@ $(document).ready(function(){
 		var index=$(this).index()
 		$('.color li span').css('border-radius','0%').eq(index).css('border-radius','50%')
 		$('.show').css('background',color[index])
+		$('.show input').css('background',color[index])
 		$('#ul li').eq(index).remove()
 		todos.splice(index,1)
 		localStorage.todos=JSON.stringify(todos)
